@@ -7,15 +7,17 @@ export const config = {
   requestsPerArg: {} as Record<string, number>
 };
 
+export const baseQuery = (arg: string) => {
+  return new Promise<{ data: string }>(resolve => {
+    config.requestsPerArg[arg] ??= 0
+    const nextNumber = ++config.requestsPerArg[arg]
+    const duration = config.minimumRequestDuration + Math.random() * (config.maximumRequestDuration - config.minimumRequestDuration)
+    setTimeout(() => resolve({data: `${arg}${nextNumber}`}), duration)
+  })
+}
+
 export const api = createApi({
-  baseQuery(arg: string){
-    return new Promise<{ data: string }>(resolve => {
-      config.requestsPerArg[arg] ??= 0
-      const nextNumber = ++config.requestsPerArg[arg]
-      const duration = config.minimumRequestDuration + Math.random() * (config.maximumRequestDuration - config.minimumRequestDuration)
-      setTimeout(() => resolve({data: `${arg}${nextNumber}`}), duration)
-    })
-  },
+  baseQuery,
   tagTypes: ['QUERY'],
   endpoints: build => ({
     some: build.query({
