@@ -1,7 +1,7 @@
 import {baseQuery} from "./store";
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 
-export default function ReactQuery({ arg, skip }: { arg: string; skip: boolean }) {
+export function Child({ arg, skip }: { arg: string; skip: boolean }) {
     const result = useQuery({
         queryKey: [arg],
         queryFn: () => baseQuery(arg),
@@ -16,4 +16,12 @@ export default function ReactQuery({ arg, skip }: { arg: string; skip: boolean }
                     : `${result.data?.data} ${result.isFetching ? "(fetching)" : ""}`}
         </div>
     );
+}
+
+export const Invalidate = () => {
+    const queryClient = useQueryClient()
+
+    return <button onClick={() => queryClient.invalidateQueries()}>
+        invalidate
+    </button>
 }
