@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as ReactDOMClient from "react-dom/profiling";
 import { Provider } from "react-redux";
 import { store } from "./store";
