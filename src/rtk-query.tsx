@@ -1,6 +1,7 @@
-import {useSomeQuery} from "./store";
+import {api, useSomeQuery} from "./store";
+import {useDispatch} from "react-redux";
 
-export default function RtkQuery({ arg, skip }: { arg: string; skip: boolean }) {
+export function Child({ arg, skip }: { arg: string; skip: boolean }) {
     const result = useSomeQuery(arg, { skip });
     return (
         <div>
@@ -11,4 +12,11 @@ export default function RtkQuery({ arg, skip }: { arg: string; skip: boolean }) 
                     : `${result.data} ${result.isFetching ? "(fetching)" : ""}`}
         </div>
     );
+}
+
+export const Invalidate = () => {
+    const dispatch = useDispatch()
+    return <button onClick={() => dispatch(api.util.invalidateTags(["QUERY"]))}>
+        invalidate
+    </button>
 }
