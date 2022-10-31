@@ -4,6 +4,8 @@ import { dependencies } from "../package.json";
 import { api, config, useSomeQuery } from "./store";
 import { StrictMode, Fragment, Profiler } from "react";
 import { useDispatch } from "react-redux";
+import RtkQuery from "./rtk-query";
+import ReactQuery from "./react-query";
 
 function useNumberValue(
   initialValue: number,
@@ -32,19 +34,6 @@ function useStringValue(initialValue: string) {
     setState(e.currentTarget.value);
   };
   return { value, onChange };
-}
-
-function Child({ arg, skip }: { arg: string; skip: boolean }) {
-  const result = useSomeQuery(arg, { skip });
-  return (
-    <div>
-      {result.isUninitialized
-        ? "uninitialized"
-        : result.isLoading
-        ? "isLoading"
-        : `${result.data} ${result.isFetching ? "(fetching)" : ""}`}
-    </div>
-  );
 }
 
 const onRenderCallback: React.ProfilerOnRenderCallback = (
@@ -82,9 +71,12 @@ export default function App() {
   const childrenMounted = useBooleanValue(true);
   const skip = useBooleanValue(false);
   const prefix = useStringValue("test");
+  const [framework, setFramework] = useState("rtk-query");
   const StrictWrapper = strictMode ? StrictMode : Fragment;
 
   const dispatch = useDispatch();
+
+  const Child = framework === "rtk-query" ? RtkQuery : ReactQuery;
 
   return (
     <div
@@ -96,6 +88,13 @@ export default function App() {
     >
       <h1>RTK Perf test</h1>
       <p>Version: {dependencies["@reduxjs/toolkit"]}</p>
+      <label>
+        framework:{" "}
+        <select onChange={event => setFramework(event.target.value)} value={framework}>
+          <option value="rtk-query">RTK Query</option>
+          <option value="react-query">React Query</option>
+        </select>
+      </label>
       <label>
         number of children: <br /> <input type="number" {...numberOfChildren} />
       </label>
