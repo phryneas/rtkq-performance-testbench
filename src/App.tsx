@@ -1,6 +1,6 @@
 import { ChangeEventHandler, useState } from "react";
 import "./styles.css";
-import { dependencies } from "../package.json";
+import pkg from "../package.json";
 import { api, config, useSomeQuery } from "./store";
 import { StrictMode, Fragment, Profiler } from "react";
 import { useDispatch } from "react-redux";
@@ -87,7 +87,7 @@ export default function App() {
       }}
     >
       <h1>RTK Perf test</h1>
-      <p>Version: {dependencies["@reduxjs/toolkit"]}</p>
+      <p>Version: {pkg.dependencies["@reduxjs/toolkit"]}</p>
       <label>
         framework:{" "}
         <select onChange={event => setFramework(event.target.value)} value={framework}>
