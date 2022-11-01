@@ -2,10 +2,10 @@ import { ChangeEventHandler, useState } from "react";
 import "./styles.css";
 import pkg from "../package.json";
 import { api, config, useSomeQuery } from "./store";
+import { dependencies } from "../package.json";
 import { StrictMode, Fragment, Profiler } from "react";
-import { useDispatch } from "react-redux";
-import RtkQuery from "./rtk-query";
-import ReactQuery from "./react-query";
+import * as RtkQuery from "./rtk-query";
+import * as ReactQuery from "./react-query";
 
 function useNumberValue(
   initialValue: number,
@@ -74,9 +74,7 @@ export default function App() {
   const [framework, setFramework] = useState("rtk-query");
   const StrictWrapper = strictMode ? StrictMode : Fragment;
 
-  const dispatch = useDispatch();
-
-  const Child = framework === "rtk-query" ? RtkQuery : ReactQuery;
+  const { Child, Invalidate } = framework === "rtk-query" ? RtkQuery : ReactQuery;
 
   return (
     <div
@@ -126,9 +124,7 @@ export default function App() {
           to <input type="number" {...responseTimesTo} />
         </label>
       </div>
-      <button onClick={() => dispatch(api.util.invalidateTags(["QUERY"]))}>
-        invalidate
-      </button>
+      <Invalidate />
       <StrictWrapper>
         <Profiler id="children" onRender={onRenderCallback}>
           <div

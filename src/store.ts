@@ -1,4 +1,7 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { 
+  configureStore,
+ autoBatchEnhancer
+} from "@reduxjs/toolkit";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const config = {
@@ -35,6 +38,7 @@ export const store = configureStore({
   },
   middleware(gDm){
     return gDm().concat(api.middleware)
-  }
+  },
+  enhancers: (existingEnhancers) => existingEnhancers.concat(autoBatchEnhancer())
 
 })
