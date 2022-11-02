@@ -37,7 +37,7 @@ export const store = configureStore({
     [api.reducerPath]: api.reducer,
   },
   middleware(gDm){
-    return gDm().concat(api.middleware)
+    return gDm({immutableCheck: false, serializableCheck: false}).concat(api.middleware)
   },
   enhancers: (existingEnhancers) => existingEnhancers.concat(autoBatchEnhancer())
 
