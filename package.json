@@ -5,7 +5,7 @@
   "keywords": [],
   "main": "src/index.tsx",
   "dependencies": {
-    "@reduxjs/toolkit": "1.9.0-rc.0",
+    "@reduxjs/toolkit": "1.9.0-rc.1",
     "@tanstack/react-query": "4.13.5",
     "react": "18.0.0",
     "react-dom": "18.0.0",
