@@ -292,10 +292,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@reduxjs/toolkit@1.9.0-rc.0":
-  version "1.9.0-rc.0"
-  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.9.0-rc.0.tgz#cdf9cd0584828beed46527ab3675e6d70a0a3efa"
-  integrity sha512-EyCTLBN5wI0F9LAMoY03UtV6EbFiBRIzLEf7ediofCZ19J6aItExAnr3tbqtjD7FuzSHPAVDYY92/5HsKkZYXA==
+"@reduxjs/toolkit@1.9.0-rc.1":
+  version "1.9.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.9.0-rc.1.tgz#e1cf082c18940082520d53d8e1d74121620469eb"
+  integrity sha512-dc4YcvN9aHULyjEXMUFeFGBNeS1XO2m3nRcrk+OGXH+Jgdmep64l4yZtRnayXrFBg492F/+Q1TZoKO8grDkZ1Q==
   dependencies:
     immer "^9.0.7"
     redux "^4.1.2"
