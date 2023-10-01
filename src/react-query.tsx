@@ -9,9 +9,9 @@ export function Child({ arg, skip }: { arg: string; skip: boolean }) {
     });
     return (
         <div>
-            {result.isInitialLoading
+            {result.isLoading
                 ? "isLoading"
-                : result.isLoading && !result.isFetching
+                : result.isPending
                     ? "uninitialized"
                     : `${result.data?.data} ${result.isFetching ? "(fetching)" : ""}`}
         </div>

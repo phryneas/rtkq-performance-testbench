@@ -1,39 +1,39 @@
-import { ChangeEventHandler, useState } from "react";
-import "./styles.css";
-import pkg from "../package.json";
-import { api, config, useSomeQuery } from "./store";
-import { dependencies } from "../package.json";
-import { StrictMode, Fragment, Profiler } from "react";
-import * as RtkQuery from "./rtk-query";
-import * as ReactQuery from "./react-query";
+import { ChangeEventHandler, useState } from 'react'
+import './styles.css'
+import pkg from '../package.json'
+import { config } from './store'
+import { StrictMode, Fragment, Profiler } from 'react'
+import * as RtkQuery from './rtk-query'
+import * as ReactQuery from './react-query'
+import * as Swr from './swr'
 
 function useNumberValue(
   initialValue: number,
   afterChange?: (value: number) => void
 ) {
-  const [value, setState] = useState(initialValue);
+  const [value, setState] = useState(initialValue)
   const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const value = e.currentTarget.valueAsNumber;
-    setState(value);
-    afterChange?.(value);
-  };
-  return { value, onChange };
+    const value = e.currentTarget.valueAsNumber
+    setState(value)
+    afterChange?.(value)
+  }
+  return { value, onChange }
 }
 
 function useBooleanValue(initialValue: boolean) {
-  const [checked, setState] = useState(initialValue);
+  const [checked, setState] = useState(initialValue)
   const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setState(e.currentTarget.checked);
-  };
-  return { checked, onChange };
+    setState(e.currentTarget.checked)
+  }
+  return { checked, onChange }
 }
 
 function useStringValue(initialValue: string) {
-  const [value, setState] = useState(initialValue);
+  const [value, setState] = useState(initialValue)
   const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setState(e.currentTarget.value);
-  };
-  return { value, onChange };
+    setState(e.currentTarget.value)
+  }
+  return { value, onChange }
 }
 
 const onRenderCallback: React.ProfilerOnRenderCallback = (
@@ -52,45 +52,62 @@ const onRenderCallback: React.ProfilerOnRenderCallback = (
     baseDuration,
     startTime,
     commitTime,
-    interactions
-  });
-};
+    interactions,
+  })
+}
+
+const getFramework = (framework: string) => {
+  switch (framework) {
+    case 'rtk-query':
+      return [RtkQuery, pkg.dependencies['@reduxjs/toolkit']] as const
+    case 'react-query':
+      return [ReactQuery, pkg.dependencies['@tanstack/react-query']] as const
+    case 'swr':
+      return [Swr, pkg.dependencies['swr']] as const
+    default:
+      throw new Error(`Unknown framework: ${framework}`)
+  }
+}
 
 export default function App() {
-  const numberOfChildren = useNumberValue(10);
-  const strictMode = useBooleanValue(false);
-  const individualQueries = useBooleanValue(true);
+  const numberOfChildren = useNumberValue(10)
+  const strictMode = useBooleanValue(false)
+  const individualQueries = useBooleanValue(true)
   const responseTimesFrom = useNumberValue(
     config.minimumRequestDuration,
     (v) => (config.minimumRequestDuration = v)
-  );
+  )
   const responseTimesTo = useNumberValue(
     config.maximumRequestDuration,
     (v) => (config.maximumRequestDuration = v)
-  );
-  const childrenMounted = useBooleanValue(true);
-  const skip = useBooleanValue(false);
-  const prefix = useStringValue("test");
-  const [framework, setFramework] = useState("rtk-query");
-  const StrictWrapper = strictMode ? StrictMode : Fragment;
+  )
+  const childrenMounted = useBooleanValue(true)
+  const skip = useBooleanValue(false)
+  const prefix = useStringValue('test')
+  const [framework, setFramework] = useState('rtk-query')
+  const StrictWrapper = strictMode ? StrictMode : Fragment
 
-  const { Child, Invalidate } = framework === "rtk-query" ? RtkQuery : ReactQuery;
+  const [{ Child, Invalidate }, version] = getFramework(framework)
 
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        maxHeight: "95vh"
+        display: 'flex',
+        flexDirection: 'column',
+        maxHeight: '95vh',
       }}
     >
       <h1>RTK Perf test</h1>
-      <p>Version: {pkg.dependencies["@reduxjs/toolkit"]}</p>
+      <p>Version: {version}</p>
       <label>
-        framework:{" "}
-        <select onChange={event => setFramework(event.target.value)} value={framework}>
+        framework:{' '}
+        <select
+          onChange={(event) => setFramework(event.target.value)}
+          value={framework}
+        >
           <option value="rtk-query">RTK Query</option>
           <option value="react-query">React Query</option>
+          <option value="swr">SWR</option>
         </select>
       </label>
       <label>
@@ -115,7 +132,7 @@ export default function App() {
         <input type="checkbox" {...skip} />
         skip
       </label>
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
         response times: (ms)&nbsp;
         <label>
           from <input type="number" {...responseTimesFrom} />
@@ -129,10 +146,10 @@ export default function App() {
         <Profiler id="children" onRender={onRenderCallback}>
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
+              display: 'flex',
+              flexDirection: 'column',
               flexGrow: 1,
-              overflow: "scroll"
+              overflow: 'scroll',
             }}
           >
             {childrenMounted.checked &&
@@ -142,14 +159,14 @@ export default function App() {
                     key={idx}
                     skip={skip.checked}
                     arg={`${prefix.value}-${
-                      individualQueries.checked ? `${idx}-` : ""
+                      individualQueries.checked ? `${idx}-` : ''
                     }`}
                   />
-                );
+                )
               })}
           </div>
         </Profiler>
       </StrictWrapper>
     </div>
-  );
+  )
 }
